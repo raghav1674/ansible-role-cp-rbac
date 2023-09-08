@@ -1,0 +1,7 @@
+- name: CP RBAC
+  hosts: localhost
+  tags: cp_rbac
+  gather_facts: false
+  tasks:
+    - import_role:
+        name: cp-rbac

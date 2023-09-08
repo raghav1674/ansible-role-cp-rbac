@@ -1,0 +1,119 @@
+---
+clusters:
+  kafka-cluster:
+    clusterId: "D8TCDF-bS0mdqQiH8O15xw"
+    principals:
+      groups:
+        - principal: "KafkaDevelopers"
+          clusterRoleBindings:
+            - roleName: SystemAdmin
+          resourceRoleBindings:
+            - roleName: DeveloperRead
+              resourceType: Group
+              name: "*"
+              patternType: LITERAL
+
+        - principal: "KafkaDevelopers1"
+          clusterRoleBindings:
+            - roleName: SystemAdmin
+          resourceRoleBindings:
+            - roleName: DeveloperRead
+              resourceType: Group
+              name: "*"
+              patternType: LITERAL
+            - roleName: DeveloperRead
+              resourceType: Group
+              name: "test*"
+              patternType: LITERAL
+            - roleName: DeveloperWrite
+              resourceType: Cluster
+              name: "kafka-cluster"
+              patternType: LITERAL
+      users:
+        - principal: "KafkaDevelopers"
+          clusterRoleBindings:
+            - roleName: SystemAdmin
+          resourceRoleBindings:
+            - roleName: DeveloperRead
+              resourceType: Group
+              name: "*"
+              patternType: LITERAL
+        - principal: "raghav"
+          clusterRoleBindings:
+            - roleName: SystemAdmin
+
+  connect-cluster:
+    clusterId: "connect-cluster"
+    principals:
+      groups:
+        - principal: "KafkaDevelopers1"
+          clusterRoleBindings:
+            - roleName: SystemAdmin
+            - roleName: ClusterAdmin
+          resourceRoleBindings:
+            - roleName: DeveloperRead
+              resourceType: "Connector"
+              name: "*"
+              patternType: LITERAL
+            - roleName: DeveloperRead
+              resourceType: "Connector"
+              name: "test*"
+              patternType: LITERAL
+
+      users:
+        - principal: "KafkaDevelopers"
+          clusterRoleBindings:
+            - roleName: SystemAdmin
+          resourceRoleBindings:
+            - roleName: DeveloperRead
+              resourceType: "Connector"
+              name: "*"
+              patternType: LITERAL
+        - principal: "raghav"
+          clusterRoleBindings:
+            - roleName: AuditAdmin
+            - roleName: UserAdmin
+          resourceRoleBindings:
+            - roleName: DeveloperWrite
+              resourceType: "Connector"
+              name: "*"
+              patternType: LITERAL
+
+  ksql-cluster:
+    clusterId: "ksql-cluster"
+    principals:
+      groups:
+        - principal: "KafkaDevelopers1"
+          clusterRoleBindings:
+            - roleName: SystemAdmin
+            - roleName: ClusterAdmin
+      users:
+        - principal: "raghav"
+          clusterRoleBindings:
+            - roleName: SystemAdmin
+
+  schema-registry-cluster:
+    clusterId: "schema-registry"
+    principals:
+      groups:
+        - principal: "KafkaDevelopers1"
+          clusterRoleBindings:
+            - roleName: SystemAdmin
+            - roleName: ClusterAdmin
+      users:
+        - principal: "raghav"
+          clusterRoleBindings:
+            - roleName: SystemAdmin
+          resourceRoleBindings:
+            - roleName: DeveloperWrite
+              resourceType: "Subject"
+              name: "*"
+              patternType: LITERAL
+# {
+#   "clusters": {
+#     "kafka-cluster": "D8TCDF-bS0mdqQiH8O15xw",
+#     "connect-cluster": "connect-cluster",
+#     "ksql-cluster": "ksql-cluster",
+#     "schema-registry-cluster": "schema-registry"
+#   }
+# }
