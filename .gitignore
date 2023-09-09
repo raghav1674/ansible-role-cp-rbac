@@ -1,5 +1,7 @@
-myenv
+cp-rbac-env
 *.pyc
 __pycache__
 *.exe 
 *.env
+.coverage
+htmlcov

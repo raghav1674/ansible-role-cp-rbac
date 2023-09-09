@@ -17,7 +17,7 @@ class MetadataClusterScope:
         self.cluster_id = cluster_id
 
     def __repr__(self):
-        return self.__dict__
+        return str(self.get_request_body())
 
     def get_request_body(self):
         mds_scope_request =  {
@@ -230,7 +230,7 @@ class CPMetadataApiService:
 
         if response.ok:
             response_data = response.json()
-
+        
             if len(response_data) == 0: return [],[]
             
             resource_role_bindings = list() 
@@ -249,7 +249,7 @@ class CPMetadataApiService:
     @staticmethod
     def __group_role_binding_by(role_bindings,field):
         '''
-            Group the role_binding object based on a given field
+            Group the list of resource role_binding object based on a given field
         '''
         role_bindings_by_field = {}
         for role_binding  in role_bindings:
@@ -398,7 +398,3 @@ def main():
 if __name__ == '__main__':
     main()
 
-
-# Cluster Scope
-# Exception Handling
-# Test
