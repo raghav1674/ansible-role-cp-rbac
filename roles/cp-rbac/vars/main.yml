@@ -109,6 +109,14 @@ clusters:
               resourceType: "Subject"
               name: "*"
               patternType: LITERAL
+        - principal: "alice"
+          clusterRoleBindings:
+            - roleName: SystemAdmin
+          resourceRoleBindings:
+            - roleName: DeveloperWrite
+              resourceType: "Subject"
+              name: "*"
+              patternType: LITERAL
 # {
 #   "clusters": {
 #     "kafka-cluster": "D8TCDF-bS0mdqQiH8O15xw",

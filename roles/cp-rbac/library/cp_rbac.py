@@ -4,6 +4,9 @@ from ansible.module_utils.basic import AnsibleModule
 import requests
 import json
 
+
+PRINCIPAL_TYPES = ["Group","User"]
+
 class MetadataClusterScope:
     '''
         MetadataClusterScope Representation
@@ -37,7 +40,7 @@ class ResourceRoleBinding:
     def __init__(self,role_name,binding):
         self.binding = binding
         self.role_name  = role_name
-    
+
     def __repr__(self):
         return "{}: {}".format(self.role_name,self.binding)
 
@@ -163,7 +166,7 @@ class CPMetadataApiService:
         for role in cluster_roles:
             response = self.cpmetadata_api_request(path.format(self.principal,role.role_name)).post_entity(json.dumps(request_body))
             if not response.ok:
-                raise Exception(f'Something bad happened :: {response.json()}')
+                raise Exception(str(response.json()))
 
     def delete_cluster_role_bindings(self,cluster_roles):
         '''
@@ -174,7 +177,7 @@ class CPMetadataApiService:
         for role in cluster_roles:
             response = self.cpmetadata_api_request(path.format(self.principal,role.role_name)).delete_entity(json.dumps(request_body))
             if not response.ok:
-                raise Exception(f'Something bad happened :: {response}')
+                raise Exception(str(response.json()))
             
     def create_resource_role_bindings(self,role_bindings):
         '''
@@ -189,7 +192,7 @@ class CPMetadataApiService:
             }
             response = self.cpmetadata_api_request(path.format(self.principal,role_name)).post_entity(json.dumps(request_body))
             if not response.ok:
-                raise Exception(f'Something bad happened :: {response.json()}')
+                raise Exception(str(response.json()))
             
     def delete_resource_role_bindings(self,role_bindings):
         '''
@@ -205,7 +208,7 @@ class CPMetadataApiService:
             }
             response = self.cpmetadata_api_request(path.format(self.principal,role_name)).delete_entity(json.dumps(request_body))
             if not response.ok:
-                raise Exception(f'Something bad happened :: {response.json()}')
+                raise Exception(str(response.json()))
             
     def update_role_bindings(self,diff_cluster_role_bindings,diff_resource_role_bindings):
         '''
@@ -241,9 +244,8 @@ class CPMetadataApiService:
                     resource_role_bindings.append(ResourceRoleBinding(role_name,binding))
             return resource_role_bindings,cluster_role_bindings
         else:
-            print(self.mds_scope.get_request_body())
-            raise Exception(f'Something had happened : {response.json()}')
-    
+            raise Exception(str(response.json()))
+
     @staticmethod
     def __group_role_binding_by(role_bindings,field):
         '''
@@ -284,7 +286,6 @@ class CPMetadataApiService:
                     break 
             if not found:
                 diff_bindings["remove"].append(binding)
-
         return diff_bindings
 
 def main():
@@ -315,7 +316,14 @@ def main():
 
 
     # mds scope object
-    mds_cluster_id = CPMetadataApiRequest(domain,"metadataClusterId", username, password,verify_ssl).get_entity().text
+    try:
+        mds_response = CPMetadataApiRequest(domain,"metadataClusterId", username, password,verify_ssl).get_entity()
+        if not mds_response.ok:
+            module.fail_json(msg=f'{mds_response.reason}')
+    except Exception as e:
+        module.fail_json(msg=str(e))
+
+    mds_cluster_id = mds_response.text
     mds_scope = MetadataClusterScope(mds_cluster_id=mds_cluster_id) 
 
     if cluster_type != "kafka-cluster":
@@ -338,9 +346,16 @@ def main():
         resource_role_bindings.append(ResourceRoleBinding(role_name,binding))
 
 
-   
+    assert(isinstance(principal_type,str))
+    
+    principal_type = principal_type.title() 
+    principal_name = data.get("principal",None)
 
-    principal = "{}:{}".format(principal_type.title(),data["principal"])
+    assert(principal_type in  PRINCIPAL_TYPES and isinstance(principal_name,str) and len(principal_name) > 0)
+
+
+    principal = "{}:{}".format(principal_type,principal_name)
+   
 
     cpmetadata_api_service =  CPMetadataApiService(domain=domain,
                                                    username=username,
@@ -351,39 +366,33 @@ def main():
                                                     principal = principal,
                                                     state=state,
                                                     verify_ssl=verify_ssl)
-    
 
-    is_resource_role_binding_equal,diff_resource_bindings,actual_resource_bindings,requested_resource_binding = cpmetadata_api_service.compare_resource_rolebindings()
-    is_cluster_role_binding_equal,diff_cluster_bindings,actual_cluster_bindings,requested_cluster_binding = cpmetadata_api_service.compare_cluster_rolebindings()
-    
-
-    def should_update(check_mode,diff_mode):
+    def should_update(module):
+        is_resource_role_binding_equal,diff_resource_bindings,actual_resource_bindings,requested_resource_binding = cpmetadata_api_service.compare_resource_rolebindings()
+        is_cluster_role_binding_equal,diff_cluster_bindings,actual_cluster_bindings,requested_cluster_binding = cpmetadata_api_service.compare_cluster_rolebindings()
+        
         if not (is_cluster_role_binding_equal and is_resource_role_binding_equal):
-                if not check_mode:
+            if not module.check_mode:
                     cpmetadata_api_service.update_role_bindings(diff_cluster_bindings,diff_resource_bindings)
-                # module.exit_json(changed=True,diff={"prepared": json.dumps({
-                #                                 "resource_bindings": str(diff_resource_bindings),
-                #                                 "cluster_bindings": str(diff_cluster_bindings),
-                #                             },indent=10)
-                #                         }
-                #                     )
-                if diff_mode:
-                    module.exit_json(changed=True,diff={"before": json.dumps({
-                                                        "resource_bindings": str(actual_resource_bindings),
-                                                        "cluster_bindings": str(actual_cluster_bindings),
-                                                    },indent=4),
-                                                    "after":json.dumps({
-                                                        "resource_bindings": str(requested_resource_binding),
-                                                        "cluster_bindings": str(requested_cluster_binding),
-                                                    },indent=4)
-                                                }
-                                            )
-                module.exit_json(changed=True)
+            if module._diff:
+                module.exit_json(changed=True,diff={"before": json.dumps({
+                                                    "resource_bindings": str(actual_resource_bindings),
+                                                    "cluster_bindings": str(actual_cluster_bindings),
+                                                },indent=2)+"\n",
+                                                "after":json.dumps({
+                                                    "resource_bindings": str(requested_resource_binding),
+                                                    "cluster_bindings": str(requested_cluster_binding),
+                                                },indent=2)+"\n"
+                                            }
+                                        )
+            module.exit_json(changed=True)
         else:
             module.exit_json(changed=False)
 
-    
-    should_update(module.check_mode,module._diff)
+    try:
+        should_update(module)
+    except Exception as e:
+        module.fail_json(msg=str(e))
 
 
 if __name__ == '__main__':

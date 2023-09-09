@@ -1,6 +1,6 @@
 - name: Create Group RBAC for kafka-cluster
   cp_rbac:
-    domain: "https://localhost:8091"
+    domain: "https://localhost:8092"
     username: "superUser"
     password: "superUser"
     verify_ssl: False
