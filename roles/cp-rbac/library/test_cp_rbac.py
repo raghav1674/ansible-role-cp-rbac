@@ -227,5 +227,221 @@ class TestCPMetadataApiService(unittest.TestCase):
         actual_result = cp_metadata_api_service._CPMetadataApiService__diff_bindings(actual_bindings,requested_bindings)
 
         self.assertEqual(actual_result,expected_result)
+    
+    @patch('cp_rbac.CPMetadataApiRequest')
+    def test_compare_cluster_rolebindings(self,mock_cpmetadata_api_request):
 
-  
+        response_json  = {
+            self.principal: {
+                "Operator": [],
+            }
+        }
+
+        mock_response = Mock()
+        mock_response.ok = True 
+        mock_response.json.return_value = response_json
+        mock_cpmetadata_api_request_instance = mock_cpmetadata_api_request.return_value
+        mock_cpmetadata_api_request_instance.post_entity.return_value = mock_response
+
+        cp_metadata_api_service = cp_rbac.CPMetadataApiService(self.domain,self.username,self.password,self.mds_scope,self.principal,self.resource_role_bindings,self.cluster_role_bindings,self.state,self.verify_ssl)
+        is_cluster_role_binding_equal,diff_cluster_bindings,actual_cluster_bindings,requested_cluster_binding = cp_metadata_api_service.compare_cluster_rolebindings()
+
+        self.assertEqual(is_cluster_role_binding_equal,False)
+        self.assertEqual(diff_cluster_bindings,{"add": [self.cluster_role_bindings[1]], "remove": []})
+        self.assertListEqual(actual_cluster_bindings,[self.cluster_role_bindings[0]])
+        self.assertListEqual(requested_cluster_binding,self.cluster_role_bindings)
+
+    @patch('cp_rbac.CPMetadataApiRequest')
+    def test_compare_resource_rolebindings(self,mock_cpmetadata_api_request):
+        response_json  = {
+            self.principal: {
+                "DeveloperRead":[
+                    {
+                        "resourceType": "Group",
+                        "name": "test-*",
+                        "patternType": "LITERAL"
+                    }
+                ]
+            }
+        }
+        mock_response = Mock()
+        mock_response.ok = True 
+        mock_response.json.return_value = response_json
+        mock_cpmetadata_api_request_instance = mock_cpmetadata_api_request.return_value
+        mock_cpmetadata_api_request_instance.post_entity.return_value = mock_response
+
+        cp_metadata_api_service = cp_rbac.CPMetadataApiService(self.domain,self.username,self.password,self.mds_scope,self.principal,self.resource_role_bindings,self.cluster_role_bindings,self.state,self.verify_ssl)
+        is_resource_role_binding_equal,diff_resource_bindings,actual_resource_bindings,requested_resource_binding = cp_metadata_api_service.compare_resource_rolebindings()
+
+        self.assertEqual(is_resource_role_binding_equal,False)
+        self.assertEqual(diff_resource_bindings,{"add": [self.resource_role_bindings[1]], "remove": []})
+        self.assertListEqual(actual_resource_bindings,[self.resource_role_bindings[0]])
+        self.assertListEqual(requested_resource_binding,self.resource_role_bindings)
+
+    @patch('cp_rbac.CPMetadataApiRequest')
+    def test_create_cluster_role_bindings(self,mock_cpmetadata_api_request):
+        response_json  = {
+            "message": "Cluster Role Binding Created"
+        }
+        mock_response = Mock()
+        mock_response.ok = True 
+        mock_response.json.return_value = response_json
+        mock_cpmetadata_api_request_instance = mock_cpmetadata_api_request.return_value
+        mock_cpmetadata_api_request_instance.post_entity.return_value = mock_response
+
+        cp_metadata_api_service = cp_rbac.CPMetadataApiService(self.domain,self.username,self.password,self.mds_scope,self.principal,self.resource_role_bindings,self.cluster_role_bindings,self.state,self.verify_ssl)
+        result = cp_metadata_api_service.create_cluster_role_bindings(self.cluster_role_bindings)
+
+        self.assertEqual(None,result)
+
+    @patch('cp_rbac.CPMetadataApiRequest')
+    def test_create_cluster_role_bindings_with_exception(self,mock_cpmetadata_api_request):
+        response_json  = {
+            "message": "Invalid Cluster Scope"
+        }
+        mock_response = Mock()
+        mock_response.ok = False 
+        mock_response.json.return_value = response_json
+        mock_cpmetadata_api_request_instance = mock_cpmetadata_api_request.return_value
+        mock_cpmetadata_api_request_instance.post_entity.return_value = mock_response
+
+        cp_metadata_api_service = cp_rbac.CPMetadataApiService(self.domain,self.username,self.password,self.mds_scope,self.principal,self.resource_role_bindings,self.cluster_role_bindings,self.state,self.verify_ssl)
+        
+        with self.assertRaises(Exception) as e:
+           cp_metadata_api_service.create_cluster_role_bindings(self.cluster_role_bindings)
+        self.assertEqual(str(e.exception),str(response_json))
+
+    @patch('cp_rbac.CPMetadataApiRequest')
+    def test_delete_cluster_role_bindings(self,mock_cpmetadata_api_request):
+        response_json  = {
+            "message": "Cluster Role Binding Deleted"
+        }
+        mock_response = Mock()
+        mock_response.ok = True 
+        mock_response.json.return_value = response_json
+        mock_cpmetadata_api_request_instance = mock_cpmetadata_api_request.return_value
+        mock_cpmetadata_api_request_instance.delete_entity.return_value = mock_response
+
+        cp_metadata_api_service = cp_rbac.CPMetadataApiService(self.domain,self.username,self.password,self.mds_scope,self.principal,self.resource_role_bindings,self.cluster_role_bindings,self.state,self.verify_ssl)
+        result = cp_metadata_api_service.delete_cluster_role_bindings(self.cluster_role_bindings)
+
+        self.assertEqual(None,result)
+
+    @patch('cp_rbac.CPMetadataApiRequest')
+    def test_delete_cluster_role_bindings_with_exception(self,mock_cpmetadata_api_request):
+        response_json  = {
+            "message": "Invalid Cluster Scope"
+        }
+        mock_response = Mock()
+        mock_response.ok = False 
+        mock_response.json.return_value = response_json
+        mock_cpmetadata_api_request_instance = mock_cpmetadata_api_request.return_value
+        mock_cpmetadata_api_request_instance.delete_entity.return_value = mock_response
+
+        cp_metadata_api_service = cp_rbac.CPMetadataApiService(self.domain,self.username,self.password,self.mds_scope,self.principal,self.resource_role_bindings,self.cluster_role_bindings,self.state,self.verify_ssl)
+        
+        with self.assertRaises(Exception) as e:
+           cp_metadata_api_service.delete_cluster_role_bindings(self.cluster_role_bindings)
+        self.assertEqual(str(e.exception),str(response_json))
+
+    @patch('cp_rbac.CPMetadataApiRequest')
+    def test_create_resource_role_bindings(self,mock_cpmetadata_api_request):
+        response_json  = {
+            "message": "Resource Role Binding Created"
+        }
+        mock_response = Mock()
+        mock_response.ok = True 
+        mock_response.json.return_value = response_json
+        mock_cpmetadata_api_request_instance = mock_cpmetadata_api_request.return_value
+        mock_cpmetadata_api_request_instance.post_entity.return_value = mock_response
+
+        cp_metadata_api_service = cp_rbac.CPMetadataApiService(self.domain,self.username,self.password,self.mds_scope,self.principal,self.resource_role_bindings,self.resource_role_bindings,self.state,self.verify_ssl)
+        result = cp_metadata_api_service.create_resource_role_bindings(self.resource_role_bindings)
+
+        self.assertEqual(None,result)
+
+    @patch('cp_rbac.CPMetadataApiRequest')
+    def test_create_resource_role_bindings_with_exception(self,mock_cpmetadata_api_request):
+        response_json  = {
+            "message": "Invalid Cluster Scope"
+        }
+        mock_response = Mock()
+        mock_response.ok = False 
+        mock_response.json.return_value = response_json
+        mock_cpmetadata_api_request_instance = mock_cpmetadata_api_request.return_value
+        mock_cpmetadata_api_request_instance.post_entity.return_value = mock_response
+
+        cp_metadata_api_service = cp_rbac.CPMetadataApiService(self.domain,self.username,self.password,self.mds_scope,self.principal,self.resource_role_bindings,self.resource_role_bindings,self.state,self.verify_ssl)
+        
+        with self.assertRaises(Exception) as e:
+           cp_metadata_api_service.create_resource_role_bindings(self.resource_role_bindings)
+        self.assertEqual(str(e.exception),str(response_json))
+
+    @patch('cp_rbac.CPMetadataApiRequest')
+    def test_delete_resource_role_bindings(self,mock_cpmetadata_api_request):
+        response_json  = {
+            "message": "Resource Role Binding Deleted"
+        }
+        mock_response = Mock()
+        mock_response.ok = True 
+        mock_response.json.return_value = response_json
+        mock_cpmetadata_api_request_instance = mock_cpmetadata_api_request.return_value
+        mock_cpmetadata_api_request_instance.delete_entity.return_value = mock_response
+
+        cp_metadata_api_service = cp_rbac.CPMetadataApiService(self.domain,self.username,self.password,self.mds_scope,self.principal,self.resource_role_bindings,self.resource_role_bindings,self.state,self.verify_ssl)
+        result = cp_metadata_api_service.delete_resource_role_bindings(self.resource_role_bindings)
+
+        self.assertEqual(None,result)
+
+    @patch('cp_rbac.CPMetadataApiRequest')
+    def test_delete_resource_role_bindings_with_exception(self,mock_cpmetadata_api_request):
+        response_json  = {
+            "message": "Invalid Cluster Scope"
+        }
+        mock_response = Mock()
+        mock_response.ok = False 
+        mock_response.json.return_value = response_json
+        mock_cpmetadata_api_request_instance = mock_cpmetadata_api_request.return_value
+        mock_cpmetadata_api_request_instance.delete_entity.return_value = mock_response
+
+        cp_metadata_api_service = cp_rbac.CPMetadataApiService(self.domain,self.username,self.password,self.mds_scope,self.principal,self.resource_role_bindings,self.resource_role_bindings,self.state,self.verify_ssl)
+        
+        with self.assertRaises(Exception) as e:
+           cp_metadata_api_service.delete_resource_role_bindings(self.resource_role_bindings)
+        self.assertEqual(str(e.exception),str(response_json))
+
+    @patch('cp_rbac.CPMetadataApiRequest')
+    def test_update_role_bindings(self,mock_cpmetadata_api_request):
+        response_json  = {
+            "message": "Sample Role Binding"
+        }
+        mock_response = Mock()
+        mock_response.ok = True 
+        mock_response.json.return_value = response_json
+        mock_cpmetadata_api_request_instance = mock_cpmetadata_api_request.return_value
+        mock_cpmetadata_api_request_instance.delete_entity.return_value = mock_response
+        mock_cpmetadata_api_request_instance.post_entity.return_value = mock_response
+
+        cp_metadata_api_service = cp_rbac.CPMetadataApiService(self.domain,self.username,self.password,self.mds_scope,self.principal,self.resource_role_bindings,self.resource_role_bindings,self.state,self.verify_ssl)
+        
+        result = cp_metadata_api_service.update_role_bindings({ "add" : self.cluster_role_bindings,"remove": []},{"add": [],"remove": self.resource_role_bindings})
+
+        self.assertEqual(None,result)
+
+    @patch('cp_rbac.CPMetadataApiRequest')
+    def test_update_role_bindings_with_exception(self,mock_cpmetadata_api_request):
+        response_json  = {
+            "message": "Invalid Cluster Scope"
+        }
+        mock_response = Mock()
+        mock_response.ok = False 
+        mock_response.json.return_value = response_json
+        mock_cpmetadata_api_request_instance = mock_cpmetadata_api_request.return_value
+        mock_cpmetadata_api_request_instance.delete_entity.return_value = mock_response
+        mock_cpmetadata_api_request_instance.post_entity.return_value = mock_response
+
+        cp_metadata_api_service = cp_rbac.CPMetadataApiService(self.domain,self.username,self.password,self.mds_scope,self.principal,self.resource_role_bindings,self.resource_role_bindings,self.state,self.verify_ssl)
+                
+        with self.assertRaises(Exception) as e:
+            cp_metadata_api_service.update_role_bindings({ "add" : self.cluster_role_bindings,"remove": []},{"add": [],"remove": self.resource_role_bindings})
+        self.assertEqual(str(e.exception),str(response_json))
