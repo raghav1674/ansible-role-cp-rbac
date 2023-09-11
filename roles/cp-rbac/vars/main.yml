@@ -1,7 +1,7 @@
 ---
 clusters:
   kafka-cluster:
-    clusterId: "<GET-THE-KAFKA-CLUSTER-ID-FROM-CONFLUENT-CENTER-UI-OR-KAFKA-CLUSTER>"
+    clusterId: "Pw2VPEUlSJ6N16edtg_9qg"
     principals:
       groups:
         - principal: "KafkaDevelopers"

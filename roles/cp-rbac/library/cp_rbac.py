@@ -297,6 +297,7 @@ def main():
         data=dict(required=False, type="dict"),
         cluster_type = dict(required=True, type="str"),
         cluster_id = dict(required=True, type="str"),
+        mds_cluster_id = dict(required=True,type="str"),
         state=dict(required=False, type="str", default='present', choices=['absent', 'present']),
 
         verify_ssl=dict(required=False, type="bool", default=True),
@@ -310,6 +311,7 @@ def main():
     data = module.params['data']
     cluster_type = module.params['cluster_type']
     cluster_id = module.params['cluster_id']
+    mds_cluster_id = module.params['mds_cluster_id']
     state = module.params['state']
     principal_type = module.params['principal_type']
     verify_ssl =  module.params['verify_ssl']
@@ -323,7 +325,10 @@ def main():
     except Exception as e:
         module.fail_json(msg=str(e))
 
-    mds_cluster_id = mds_response.text
+    current_mds_cluster_id = mds_response.text
+
+    assert mds_cluster_id == current_mds_cluster_id,f"Provided mds_cluster id is different from the current mds id {mds_cluster_id} != {current_mds_cluster_id}"
+
     mds_scope = MetadataClusterScope(mds_cluster_id=mds_cluster_id) 
 
     if cluster_type != "kafka-cluster":
@@ -346,12 +351,12 @@ def main():
         resource_role_bindings.append(ResourceRoleBinding(role_name,binding))
 
 
-    assert(isinstance(principal_type,str))
+    assert isinstance(principal_type,str) 
     
     principal_type = principal_type.title() 
     principal_name = data.get("principal",None)
 
-    assert(principal_type in  PRINCIPAL_TYPES and isinstance(principal_name,str) and len(principal_name) > 0)
+    assert principal_type in  PRINCIPAL_TYPES and isinstance(principal_name,str) and len(principal_name) > 0
 
 
     principal = "{}:{}".format(principal_type,principal_name)
