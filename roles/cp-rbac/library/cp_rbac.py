@@ -285,7 +285,7 @@ def main():
         cluster_id=dict(required=True, type="str"),
         mds_cluster_id=dict(required=True, type="str"),
         state=dict(required=False, type="str", default="present", choices=["absent", "present"]),
-        verify_ssl=dict(required=False, type="bool", default=True),
+        verify_ssl=dict(required=False, type="str", default=""),
     )
 
     module = AnsibleModule(argument_spec=fields, supports_check_mode=True)

@@ -1,7 +1,36 @@
 - name: CP RBAC
   hosts: localhost
   tags: cp_rbac
+  vars_files:
+    - vault.yml
   gather_facts: false
   tasks:
     - import_role:
         name: cp-rbac
+      vars: 
+        metadataUserName: "superUser"
+        metadataUserPassword: "{{ password }}"
+        metadataUrl: "https://localhost:8091"
+        verifySsl: "../cp-demo/scripts/security/snakeoil-ca-1.crt"
+        clusters:
+          kafka-cluster:
+            clusterId: "Pw2VPEUlSJ6N16edtg_9qg"
+            principals:
+              groups:
+                - principal: "KafkaDevelopers"
+                  clusterRoleBindings:
+                    - roleName: UserAdmin
+                  resourceRoleBindings:
+                    - roleName: DeveloperRead
+                      resourceType: Group
+                      name: "*"
+                      patternType: LITERAL
+              users:
+                - principal: "alice"
+                  clusterRoleBindings:
+                    - roleName: UserAdmin
+                  resourceRoleBindings:
+                    - roleName: DeveloperRead
+                      resourceType: Group
+                      name: "*"
+                      patternType: LITERAL

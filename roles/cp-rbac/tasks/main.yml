@@ -1,42 +1,43 @@
 - name: Create Group RBAC for kafka-cluster
   cp_rbac:
-    domain: "https://localhost:8092"
-    username: "superUser"
-    password: "superUser"
-    verify_ssl: False
+    domain: "{{ metadataUrl }}"
+    username: "{{ metadataUserName }}"
+    password: "{{ metadataUserPassword }}"
     data: "{{ item }}"
     principal_type: "group"
     cluster_type: "kafka-cluster"
     cluster_id: "{{ clusters['kafka-cluster'].clusterId }}"
     mds_cluster_id: "{{ clusters['kafka-cluster'].clusterId }}"
+    verify_ssl: "{{ verifySsl }}"
+
   with_items:
     - "{{ clusters['kafka-cluster'].principals.groups | default([]) }}"
 
 - name: Create User RBAC for kafka-cluster
   cp_rbac:
-    domain: "https://localhost:8091"
-    username: "superUser"
-    password: "superUser"
-    verify_ssl: False
+    domain: "{{ metadataUrl }}"
+    username: "{{ metadataUserName }}"
+    password: "{{ metadataUserPassword }}"
     data: "{{ item }}"
     principal_type: "user"
     cluster_type: "kafka-cluster"
     cluster_id: "{{ clusters['kafka-cluster'].clusterId }}"
     mds_cluster_id: "{{ clusters['kafka-cluster'].clusterId }}"
+    verify_ssl: "{{ verifySsl }}"
   with_items:
     - "{{ clusters['kafka-cluster'].principals.users | default([]) }}"
 
 - name: Create Group RBAC for connect-cluster
   cp_rbac:
-    domain: "https://localhost:8091"
-    username: "superUser"
-    password: "superUser"
-    verify_ssl: False
+    domain: "{{ metadataUrl }}"
+    username: "{{ metadataUserName }}"
+    password: "{{ metadataUserPassword }}"
     data: "{{ item }}"
     principal_type: "group"
     cluster_type: "connect-cluster"
     cluster_id: "{{ clusters['connect-cluster'].clusterId }}"
     mds_cluster_id: "{{ clusters['kafka-cluster'].clusterId }}"
+    verify_ssl: "{{ verifySsl }}"
   with_items:
     - "{{ clusters['connect-cluster'].principals.groups | default([]) }}"
 
@@ -45,81 +46,81 @@
     domain: "https://localhost:8091"
     username: "superUser"
     password: "superUser"
-    verify_ssl: False
     data: "{{ item }}"
     principal_type: "user"
     cluster_type: "connect-cluster"
     cluster_id: "{{ clusters['connect-cluster'].clusterId }}"
     mds_cluster_id: "{{ clusters['kafka-cluster'].clusterId }}"
+    verify_ssl: "{{ verifySsl }}"
   with_items:
     - "{{ clusters['connect-cluster'].principals.users | default([]) }}"
 
 - name: Create Group RBAC for connect-cluster
   cp_rbac:
-    domain: "https://localhost:8091"
-    username: "superUser"
-    password: "superUser"
-    verify_ssl: False
+    domain: "{{ metadataUrl }}"
+    username: "{{ metadataUserName }}"
+    password: "{{ metadataUserPassword }}"
     data: "{{ item }}"
     principal_type: "group"
     cluster_type: "connect-cluster"
     cluster_id: "{{ clusters['connect-cluster'].clusterId }}"
     mds_cluster_id: "{{ clusters['kafka-cluster'].clusterId }}"
+    verify_ssl: "{{ verifySsl }}"
   with_items:
     - "{{ clusters['connect-cluster'].principals.groups | default([]) }}"
 
 - name: Create User RBAC for ksql-cluster
   cp_rbac:
-    domain: "https://localhost:8091"
-    username: "superUser"
-    password: "superUser"
-    verify_ssl: False
+    domain: "{{ metadataUrl }}"
+    username: "{{ metadataUserName }}"
+    password: "{{ metadataUserPassword }}"
     data: "{{ item }}"
     principal_type: "user"
     cluster_type: "ksql-cluster"
     cluster_id: "{{ clusters['ksql-cluster'].clusterId }}"
     mds_cluster_id: "{{ clusters['kafka-cluster'].clusterId }}"
+    verify_ssl: "{{ verifySsl }}"
   with_items:
     - "{{ clusters['ksql-cluster'].principals.users | default([]) }}"
 
 - name: Create Group RBAC for ksql-cluster
   cp_rbac:
-    domain: "https://localhost:8091"
-    username: "superUser"
-    password: "superUser"
-    verify_ssl: False
+    domain: "{{ metadataUrl }}"
+    username: "{{ metadataUserName }}"
+    password: "{{ metadataUserPassword }}"
     data: "{{ item }}"
     principal_type: "group"
     cluster_type: "ksql-cluster"
     cluster_id: "{{ clusters['ksql-cluster'].clusterId }}"
     mds_cluster_id: "{{ clusters['kafka-cluster'].clusterId }}"
+    verify_ssl: "{{ verifySsl }}"
   with_items:
     - "{{ clusters['ksql-cluster'].principals.groups | default([]) }}"
 
 - name: Create User RBAC for schema-registry
   cp_rbac:
-    domain: "https://localhost:8091"
-    username: "superUser"
-    password: "superUser"
-    verify_ssl: False
+    domain: "{{ metadataUrl }}"
+    username: "{{ metadataUserName }}"
+    password: "{{ metadataUserPassword }}"
     data: "{{ item }}"
     principal_type: "user"
     cluster_type: "schema-registry-cluster"
     cluster_id: "{{ clusters['schema-registry-cluster'].clusterId }}"
     mds_cluster_id: "{{ clusters['kafka-cluster'].clusterId }}"
+    verify_ssl: "{{ verifySsl }}"
   with_items:
     - "{{ clusters['schema-registry-cluster'].principals.users | default([]) }}"
 
 - name: Create Group RBAC for schema-registry
   cp_rbac:
-    domain: "https://localhost:8091"
-    username: "superUser"
-    password: "superUser"
-    verify_ssl: False
+    domain: "{{ metadataUrl }}"
+    username: "{{ metadataUserName }}"
+    password: "{{ metadataUserPassword }}"
     data: "{{ item }}"
     principal_type: "user"
     cluster_type: "schema-registry-cluster"
     cluster_id: "{{ clusters['schema-registry-cluster'].clusterId }}"
     mds_cluster_id: "{{ clusters['kafka-cluster'].clusterId }}"
+    verify_ssl: "{{ verifySsl }}"
   with_items:
     - "{{ clusters['schema-registry-cluster'].principals.groups | default([]) }}"

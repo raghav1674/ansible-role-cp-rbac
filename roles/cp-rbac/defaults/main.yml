@@ -1,0 +1,46 @@
+---
+metadataUrl: ""
+metadataUserName: "" 
+metadataUserPassword: ""
+verifySsl: ""
+
+clusters:
+  kafka-cluster:
+    clusterId: "<<KAFKA-CLUSTERR-ID>>"
+    principals:
+      groups:
+        - principal: "KafkaDevelopers"
+          clusterRoleBindings:
+            - roleName: SystemAdmin
+          resourceRoleBindings:
+            - roleName: DeveloperRead
+              resourceType: Group
+              name: "*"
+              patternType: LITERAL
+      users:
+        - principal: "alice"
+          clusterRoleBindings:
+            - roleName: SystemAdmin
+          resourceRoleBindings:
+            - roleName: DeveloperRead
+              resourceType: Group
+              name: "*"
+              patternType: LITERAL
+              
+  connect-cluster:
+    clusterId: "connect-cluster"
+    principals:
+      groups: []
+      users: []
+
+  ksql-cluster:
+    clusterId: "ksql-cluster"
+    principals:
+      groups: []
+      users: []
+
+  schema-registry-cluster:
+    clusterId: "schema-registry"
+    principals:
+      groups: []
+      users: []
