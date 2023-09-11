@@ -50,3 +50,12 @@
 ##### Deactivate Virtualenv
 
 `deactivate`
+
+
+##### NOTE:
+
+- Required packages on the managed nodes are:
+    - python3
+    - python3-requests
+
+- If you want to use custom CA cert, please make sure either the CA is already trusted in the managed node or provide the file path (absolute file path as it is present in managed node not in the control node) in `verifySsl` argument.
