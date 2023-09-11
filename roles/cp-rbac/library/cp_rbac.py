@@ -119,7 +119,7 @@ class CPMetadataApiService:
     Confluent Platform Metadata Api Service
     """
 
-    def __init__(self, domain, username, password, mds_scope, principal, resource_role_bindings, cluster_role_bindings, state, verify_ssl):
+    def __init__(self, domain, username, password, mds_scope, principal, resource_role_bindings, cluster_role_bindings, verify_ssl):
         self.domain = domain
         self.resource_role_bindings = resource_role_bindings
         self.cluster_role_bindings = cluster_role_bindings
@@ -127,7 +127,6 @@ class CPMetadataApiService:
         self.principal = principal
         self.username = username
         self.password = password
-        self.state = state
         self.verify_ssl = verify_ssl
 
     def cpmetadata_api_request(self, path):
@@ -284,7 +283,6 @@ def main():
         cluster_type=dict(required=True, type="str"),
         cluster_id=dict(required=True, type="str"),
         mds_cluster_id=dict(required=True, type="str"),
-        state=dict(required=False, type="str", default="present", choices=["absent", "present"]),
         verify_ssl=dict(required=False, type="str", default=""),
     )
 
@@ -297,7 +295,6 @@ def main():
     cluster_type = module.params["cluster_type"]
     cluster_id = module.params["cluster_id"]
     mds_cluster_id = module.params["mds_cluster_id"]
-    state = module.params["state"]
     principal_type = module.params["principal_type"]
     verify_ssl = module.params["verify_ssl"]
 
@@ -342,7 +339,7 @@ def main():
 
     principal = "{}:{}".format(principal_type, principal_name)
 
-    cpmetadata_api_service = CPMetadataApiService(domain=domain, username=username, password=password, mds_scope=mds_scope, resource_role_bindings=resource_role_bindings, cluster_role_bindings=cluster_role_bindings, principal=principal, state=state, verify_ssl=verify_ssl)
+    cpmetadata_api_service = CPMetadataApiService(domain=domain, username=username, password=password, mds_scope=mds_scope, resource_role_bindings=resource_role_bindings, cluster_role_bindings=cluster_role_bindings, principal=principal, verify_ssl=verify_ssl)
 
     def should_update(module):
         is_resource_role_binding_equal, diff_resource_bindings, actual_resource_bindings, requested_resource_binding = cpmetadata_api_service.compare_resource_rolebindings()

@@ -95,7 +95,6 @@ class TestCPMetadataApiService(unittest.TestCase):
         self.cluster_role_bindings = [cp_rbac.ClusterRoleBinding("Operator"), cp_rbac.ClusterRoleBinding("UserAdmin")]
         self.mds_scope = cp_rbac.MetadataClusterScope("testKafkaCluster")
         self.principal = "User:testUser"
-        self.state = "present"
 
     @patch("cp_rbac.CPMetadataApiRequest")
     def test_get_rolebindings_for_a_principal(self, mock_cpmetadata_api_request):
@@ -106,7 +105,7 @@ class TestCPMetadataApiService(unittest.TestCase):
         mock_cpmetadata_api_request_instance = mock_cpmetadata_api_request.return_value
         mock_cpmetadata_api_request_instance.post_entity.return_value = mock_response
 
-        cp_metadata_api_service = cp_rbac.CPMetadataApiService(self.domain, self.username, self.password, self.mds_scope, self.principal, self.resource_role_bindings, self.cluster_role_bindings, self.state, self.verify_ssl)
+        cp_metadata_api_service = cp_rbac.CPMetadataApiService(self.domain, self.username, self.password, self.mds_scope, self.principal, self.resource_role_bindings, self.cluster_role_bindings, self.verify_ssl)
         resource_role_bindings, cluster_role_binding = cp_metadata_api_service._CPMetadataApiService__get_rolebindings_for_a_principal()
 
         self.assertListEqual(cp_metadata_api_service.cluster_role_bindings, cluster_role_binding)
@@ -121,7 +120,7 @@ class TestCPMetadataApiService(unittest.TestCase):
         mock_cpmetadata_api_request_instance = mock_cpmetadata_api_request.return_value
         mock_cpmetadata_api_request_instance.post_entity.return_value = mock_response
 
-        cp_metadata_api_service = cp_rbac.CPMetadataApiService(self.domain, self.username, self.password, self.mds_scope, self.principal, self.resource_role_bindings, self.cluster_role_bindings, self.state, self.verify_ssl)
+        cp_metadata_api_service = cp_rbac.CPMetadataApiService(self.domain, self.username, self.password, self.mds_scope, self.principal, self.resource_role_bindings, self.cluster_role_bindings, self.verify_ssl)
         resource_role_bindings, cluster_role_binding = cp_metadata_api_service._CPMetadataApiService__get_rolebindings_for_a_principal()
 
         self.assertListEqual([], cluster_role_binding)
@@ -136,7 +135,7 @@ class TestCPMetadataApiService(unittest.TestCase):
         mock_cpmetadata_api_request_instance = mock_cpmetadata_api_request.return_value
         mock_cpmetadata_api_request_instance.post_entity.return_value = mock_response
 
-        cp_metadata_api_service = cp_rbac.CPMetadataApiService(self.domain, self.username, self.password, self.mds_scope, self.principal, self.resource_role_bindings, self.cluster_role_bindings, self.state, self.verify_ssl)
+        cp_metadata_api_service = cp_rbac.CPMetadataApiService(self.domain, self.username, self.password, self.mds_scope, self.principal, self.resource_role_bindings, self.cluster_role_bindings, self.verify_ssl)
 
         with self.assertRaises(Exception) as e:
             cp_metadata_api_service._CPMetadataApiService__get_rolebindings_for_a_principal()
@@ -144,7 +143,7 @@ class TestCPMetadataApiService(unittest.TestCase):
 
     def test__group_role_binding_by(self):
         expected_result = {resource_role_binding.role_name: [resource_role_binding.binding] for resource_role_binding in self.resource_role_bindings}
-        cp_metadata_api_service = cp_rbac.CPMetadataApiService(self.domain, self.username, self.password, self.mds_scope, self.principal, self.resource_role_bindings, self.cluster_role_bindings, self.state, self.verify_ssl)
+        cp_metadata_api_service = cp_rbac.CPMetadataApiService(self.domain, self.username, self.password, self.mds_scope, self.principal, self.resource_role_bindings, self.cluster_role_bindings, self.verify_ssl)
         actual_result = cp_metadata_api_service._CPMetadataApiService__group_role_binding_by(self.resource_role_bindings, "role_name")
 
         self.assertEqual(actual_result, expected_result)
@@ -154,7 +153,7 @@ class TestCPMetadataApiService(unittest.TestCase):
         requested_bindings = [self.resource_role_bindings[1]]
         expected_result = {"add": [], "remove": [self.resource_role_bindings[0]]}
 
-        cp_metadata_api_service = cp_rbac.CPMetadataApiService(self.domain, self.username, self.password, self.mds_scope, self.principal, self.resource_role_bindings, self.cluster_role_bindings, self.state, self.verify_ssl)
+        cp_metadata_api_service = cp_rbac.CPMetadataApiService(self.domain, self.username, self.password, self.mds_scope, self.principal, self.resource_role_bindings, self.cluster_role_bindings, self.verify_ssl)
         actual_result = cp_metadata_api_service._CPMetadataApiService__diff_bindings(actual_bindings, requested_bindings)
 
         self.assertEqual(actual_result, expected_result)
@@ -164,7 +163,7 @@ class TestCPMetadataApiService(unittest.TestCase):
         requested_bindings = [self.cluster_role_bindings[0], self.cluster_role_bindings[1]]
         expected_result = {"add": [self.cluster_role_bindings[1]], "remove": []}
 
-        cp_metadata_api_service = cp_rbac.CPMetadataApiService(self.domain, self.username, self.password, self.mds_scope, self.principal, self.resource_role_bindings, self.cluster_role_bindings, self.state, self.verify_ssl)
+        cp_metadata_api_service = cp_rbac.CPMetadataApiService(self.domain, self.username, self.password, self.mds_scope, self.principal, self.resource_role_bindings, self.cluster_role_bindings, self.verify_ssl)
         actual_result = cp_metadata_api_service._CPMetadataApiService__diff_bindings(actual_bindings, requested_bindings)
 
         self.assertEqual(actual_result, expected_result)
@@ -179,7 +178,7 @@ class TestCPMetadataApiService(unittest.TestCase):
         mock_cpmetadata_api_request_instance = mock_cpmetadata_api_request.return_value
         mock_cpmetadata_api_request_instance.post_entity.return_value = mock_response
 
-        cp_metadata_api_service = cp_rbac.CPMetadataApiService(self.domain, self.username, self.password, self.mds_scope, self.principal, self.resource_role_bindings, self.cluster_role_bindings, self.state, self.verify_ssl)
+        cp_metadata_api_service = cp_rbac.CPMetadataApiService(self.domain, self.username, self.password, self.mds_scope, self.principal, self.resource_role_bindings, self.cluster_role_bindings, self.verify_ssl)
         is_cluster_role_binding_equal, diff_cluster_bindings, actual_cluster_bindings, requested_cluster_binding = cp_metadata_api_service.compare_cluster_rolebindings()
 
         self.assertEqual(is_cluster_role_binding_equal, False)
@@ -196,7 +195,7 @@ class TestCPMetadataApiService(unittest.TestCase):
         mock_cpmetadata_api_request_instance = mock_cpmetadata_api_request.return_value
         mock_cpmetadata_api_request_instance.post_entity.return_value = mock_response
 
-        cp_metadata_api_service = cp_rbac.CPMetadataApiService(self.domain, self.username, self.password, self.mds_scope, self.principal, self.resource_role_bindings, self.cluster_role_bindings, self.state, self.verify_ssl)
+        cp_metadata_api_service = cp_rbac.CPMetadataApiService(self.domain, self.username, self.password, self.mds_scope, self.principal, self.resource_role_bindings, self.cluster_role_bindings, self.verify_ssl)
         is_resource_role_binding_equal, diff_resource_bindings, actual_resource_bindings, requested_resource_binding = cp_metadata_api_service.compare_resource_rolebindings()
 
         self.assertEqual(is_resource_role_binding_equal, False)
@@ -213,7 +212,7 @@ class TestCPMetadataApiService(unittest.TestCase):
         mock_cpmetadata_api_request_instance = mock_cpmetadata_api_request.return_value
         mock_cpmetadata_api_request_instance.post_entity.return_value = mock_response
 
-        cp_metadata_api_service = cp_rbac.CPMetadataApiService(self.domain, self.username, self.password, self.mds_scope, self.principal, self.resource_role_bindings, self.cluster_role_bindings, self.state, self.verify_ssl)
+        cp_metadata_api_service = cp_rbac.CPMetadataApiService(self.domain, self.username, self.password, self.mds_scope, self.principal, self.resource_role_bindings, self.cluster_role_bindings, self.verify_ssl)
         result = cp_metadata_api_service.create_cluster_role_bindings(self.cluster_role_bindings)
 
         self.assertEqual(None, result)
@@ -227,7 +226,7 @@ class TestCPMetadataApiService(unittest.TestCase):
         mock_cpmetadata_api_request_instance = mock_cpmetadata_api_request.return_value
         mock_cpmetadata_api_request_instance.post_entity.return_value = mock_response
 
-        cp_metadata_api_service = cp_rbac.CPMetadataApiService(self.domain, self.username, self.password, self.mds_scope, self.principal, self.resource_role_bindings, self.cluster_role_bindings, self.state, self.verify_ssl)
+        cp_metadata_api_service = cp_rbac.CPMetadataApiService(self.domain, self.username, self.password, self.mds_scope, self.principal, self.resource_role_bindings, self.cluster_role_bindings, self.verify_ssl)
 
         with self.assertRaises(Exception) as e:
             cp_metadata_api_service.create_cluster_role_bindings(self.cluster_role_bindings)
@@ -242,7 +241,7 @@ class TestCPMetadataApiService(unittest.TestCase):
         mock_cpmetadata_api_request_instance = mock_cpmetadata_api_request.return_value
         mock_cpmetadata_api_request_instance.delete_entity.return_value = mock_response
 
-        cp_metadata_api_service = cp_rbac.CPMetadataApiService(self.domain, self.username, self.password, self.mds_scope, self.principal, self.resource_role_bindings, self.cluster_role_bindings, self.state, self.verify_ssl)
+        cp_metadata_api_service = cp_rbac.CPMetadataApiService(self.domain, self.username, self.password, self.mds_scope, self.principal, self.resource_role_bindings, self.cluster_role_bindings, self.verify_ssl)
         result = cp_metadata_api_service.delete_cluster_role_bindings(self.cluster_role_bindings)
 
         self.assertEqual(None, result)
@@ -256,7 +255,7 @@ class TestCPMetadataApiService(unittest.TestCase):
         mock_cpmetadata_api_request_instance = mock_cpmetadata_api_request.return_value
         mock_cpmetadata_api_request_instance.delete_entity.return_value = mock_response
 
-        cp_metadata_api_service = cp_rbac.CPMetadataApiService(self.domain, self.username, self.password, self.mds_scope, self.principal, self.resource_role_bindings, self.cluster_role_bindings, self.state, self.verify_ssl)
+        cp_metadata_api_service = cp_rbac.CPMetadataApiService(self.domain, self.username, self.password, self.mds_scope, self.principal, self.resource_role_bindings, self.cluster_role_bindings, self.verify_ssl)
 
         with self.assertRaises(Exception) as e:
             cp_metadata_api_service.delete_cluster_role_bindings(self.cluster_role_bindings)
@@ -271,7 +270,7 @@ class TestCPMetadataApiService(unittest.TestCase):
         mock_cpmetadata_api_request_instance = mock_cpmetadata_api_request.return_value
         mock_cpmetadata_api_request_instance.post_entity.return_value = mock_response
 
-        cp_metadata_api_service = cp_rbac.CPMetadataApiService(self.domain, self.username, self.password, self.mds_scope, self.principal, self.resource_role_bindings, self.resource_role_bindings, self.state, self.verify_ssl)
+        cp_metadata_api_service = cp_rbac.CPMetadataApiService(self.domain, self.username, self.password, self.mds_scope, self.principal, self.resource_role_bindings, self.resource_role_bindings, self.verify_ssl)
         result = cp_metadata_api_service.create_resource_role_bindings(self.resource_role_bindings)
 
         self.assertEqual(None, result)
@@ -285,7 +284,7 @@ class TestCPMetadataApiService(unittest.TestCase):
         mock_cpmetadata_api_request_instance = mock_cpmetadata_api_request.return_value
         mock_cpmetadata_api_request_instance.post_entity.return_value = mock_response
 
-        cp_metadata_api_service = cp_rbac.CPMetadataApiService(self.domain, self.username, self.password, self.mds_scope, self.principal, self.resource_role_bindings, self.resource_role_bindings, self.state, self.verify_ssl)
+        cp_metadata_api_service = cp_rbac.CPMetadataApiService(self.domain, self.username, self.password, self.mds_scope, self.principal, self.resource_role_bindings, self.resource_role_bindings, self.verify_ssl)
 
         with self.assertRaises(Exception) as e:
             cp_metadata_api_service.create_resource_role_bindings(self.resource_role_bindings)
@@ -300,7 +299,7 @@ class TestCPMetadataApiService(unittest.TestCase):
         mock_cpmetadata_api_request_instance = mock_cpmetadata_api_request.return_value
         mock_cpmetadata_api_request_instance.delete_entity.return_value = mock_response
 
-        cp_metadata_api_service = cp_rbac.CPMetadataApiService(self.domain, self.username, self.password, self.mds_scope, self.principal, self.resource_role_bindings, self.resource_role_bindings, self.state, self.verify_ssl)
+        cp_metadata_api_service = cp_rbac.CPMetadataApiService(self.domain, self.username, self.password, self.mds_scope, self.principal, self.resource_role_bindings, self.resource_role_bindings, self.verify_ssl)
         result = cp_metadata_api_service.delete_resource_role_bindings(self.resource_role_bindings)
 
         self.assertEqual(None, result)
@@ -314,7 +313,7 @@ class TestCPMetadataApiService(unittest.TestCase):
         mock_cpmetadata_api_request_instance = mock_cpmetadata_api_request.return_value
         mock_cpmetadata_api_request_instance.delete_entity.return_value = mock_response
 
-        cp_metadata_api_service = cp_rbac.CPMetadataApiService(self.domain, self.username, self.password, self.mds_scope, self.principal, self.resource_role_bindings, self.resource_role_bindings, self.state, self.verify_ssl)
+        cp_metadata_api_service = cp_rbac.CPMetadataApiService(self.domain, self.username, self.password, self.mds_scope, self.principal, self.resource_role_bindings, self.resource_role_bindings, self.verify_ssl)
 
         with self.assertRaises(Exception) as e:
             cp_metadata_api_service.delete_resource_role_bindings(self.resource_role_bindings)
@@ -330,7 +329,7 @@ class TestCPMetadataApiService(unittest.TestCase):
         mock_cpmetadata_api_request_instance.delete_entity.return_value = mock_response
         mock_cpmetadata_api_request_instance.post_entity.return_value = mock_response
 
-        cp_metadata_api_service = cp_rbac.CPMetadataApiService(self.domain, self.username, self.password, self.mds_scope, self.principal, self.resource_role_bindings, self.resource_role_bindings, self.state, self.verify_ssl)
+        cp_metadata_api_service = cp_rbac.CPMetadataApiService(self.domain, self.username, self.password, self.mds_scope, self.principal, self.resource_role_bindings, self.resource_role_bindings, self.verify_ssl)
 
         result = cp_metadata_api_service.update_role_bindings({"add": self.cluster_role_bindings, "remove": []}, {"add": [], "remove": self.resource_role_bindings})
 
@@ -346,7 +345,7 @@ class TestCPMetadataApiService(unittest.TestCase):
         mock_cpmetadata_api_request_instance.delete_entity.return_value = mock_response
         mock_cpmetadata_api_request_instance.post_entity.return_value = mock_response
 
-        cp_metadata_api_service = cp_rbac.CPMetadataApiService(self.domain, self.username, self.password, self.mds_scope, self.principal, self.resource_role_bindings, self.resource_role_bindings, self.state, self.verify_ssl)
+        cp_metadata_api_service = cp_rbac.CPMetadataApiService(self.domain, self.username, self.password, self.mds_scope, self.principal, self.resource_role_bindings, self.resource_role_bindings, self.verify_ssl)
 
         with self.assertRaises(Exception) as e:
             cp_metadata_api_service.update_role_bindings({"add": self.cluster_role_bindings, "remove": []}, {"add": [], "remove": self.resource_role_bindings})

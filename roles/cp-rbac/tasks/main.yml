@@ -9,7 +9,6 @@
     cluster_id: "{{ clusters['kafka-cluster'].clusterId }}"
     mds_cluster_id: "{{ clusters['kafka-cluster'].clusterId }}"
     verify_ssl: "{{ verifySsl }}"
-
   with_items:
     - "{{ clusters['kafka-cluster'].principals.groups | default([]) }}"
 
