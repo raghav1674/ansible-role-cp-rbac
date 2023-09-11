@@ -1,0 +1,6 @@
+[flake8]
+extend-ignore = E501
+
+[tool.black]
+line-length = 400
+skip_magic_trailing_comma = true

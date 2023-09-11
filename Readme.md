@@ -39,6 +39,14 @@
 
 `python3 -m coverage html cp_rbac.py`
 
+##### Format and Lint
+
+`python3 -m black --config fmt.toml --check .`
+
+`python3 -m black --config fmt.toml .`
+
+`python3 -m flake8 --config fmt.toml .`
+
 ##### Deactivate Virtualenv
 
 `deactivate`
