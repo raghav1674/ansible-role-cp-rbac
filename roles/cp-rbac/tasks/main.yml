@@ -10,7 +10,7 @@
     cluster_id: "{{ clusters['kafka-cluster'].clusterId }}"
     mds_cluster_id: "{{ clusters['kafka-cluster'].clusterId }}"
   with_items:
-    - "{{ clusters['kafka-cluster'].principals.groups }}"
+    - "{{ clusters['kafka-cluster'].principals.groups | default([]) }}"
 
 - name: Create User RBAC for kafka-cluster
   cp_rbac:
@@ -24,7 +24,7 @@
     cluster_id: "{{ clusters['kafka-cluster'].clusterId }}"
     mds_cluster_id: "{{ clusters['kafka-cluster'].clusterId }}"
   with_items:
-    - "{{ clusters['kafka-cluster'].principals.users }}"
+    - "{{ clusters['kafka-cluster'].principals.users | default([]) }}"
 
 - name: Create Group RBAC for connect-cluster
   cp_rbac:
@@ -38,7 +38,7 @@
     cluster_id: "{{ clusters['connect-cluster'].clusterId }}"
     mds_cluster_id: "{{ clusters['kafka-cluster'].clusterId }}"
   with_items:
-    - "{{ clusters['connect-cluster'].principals.groups }}"
+    - "{{ clusters['connect-cluster'].principals.groups | default([]) }}"
 
 - name: Create User RBAC for connect-cluster
   cp_rbac:
@@ -52,7 +52,7 @@
     cluster_id: "{{ clusters['connect-cluster'].clusterId }}"
     mds_cluster_id: "{{ clusters['kafka-cluster'].clusterId }}"
   with_items:
-    - "{{ clusters['connect-cluster'].principals.users }}"
+    - "{{ clusters['connect-cluster'].principals.users | default([]) }}"
 
 - name: Create Group RBAC for connect-cluster
   cp_rbac:
@@ -66,7 +66,7 @@
     cluster_id: "{{ clusters['connect-cluster'].clusterId }}"
     mds_cluster_id: "{{ clusters['kafka-cluster'].clusterId }}"
   with_items:
-    - "{{ clusters['connect-cluster'].principals.groups }}"
+    - "{{ clusters['connect-cluster'].principals.groups | default([]) }}"
 
 - name: Create User RBAC for ksql-cluster
   cp_rbac:
@@ -80,7 +80,7 @@
     cluster_id: "{{ clusters['ksql-cluster'].clusterId }}"
     mds_cluster_id: "{{ clusters['kafka-cluster'].clusterId }}"
   with_items:
-    - "{{ clusters['ksql-cluster'].principals.users }}"
+    - "{{ clusters['ksql-cluster'].principals.users | default([]) }}"
 
 - name: Create Group RBAC for ksql-cluster
   cp_rbac:
@@ -94,7 +94,7 @@
     cluster_id: "{{ clusters['ksql-cluster'].clusterId }}"
     mds_cluster_id: "{{ clusters['kafka-cluster'].clusterId }}"
   with_items:
-    - "{{ clusters['ksql-cluster'].principals.groups }}"
+    - "{{ clusters['ksql-cluster'].principals.groups | default([]) }}"
 
 - name: Create User RBAC for schema-registry
   cp_rbac:
@@ -108,7 +108,7 @@
     cluster_id: "{{ clusters['schema-registry-cluster'].clusterId }}"
     mds_cluster_id: "{{ clusters['kafka-cluster'].clusterId }}"
   with_items:
-    - "{{ clusters['schema-registry-cluster'].principals.users }}"
+    - "{{ clusters['schema-registry-cluster'].principals.users | default([]) }}"
 
 - name: Create Group RBAC for schema-registry
   cp_rbac:
@@ -122,4 +122,4 @@
     cluster_id: "{{ clusters['schema-registry-cluster'].clusterId }}"
     mds_cluster_id: "{{ clusters['kafka-cluster'].clusterId }}"
   with_items:
-    - "{{ clusters['schema-registry-cluster'].principals.groups }}"
+    - "{{ clusters['schema-registry-cluster'].principals.groups | default([]) }}"

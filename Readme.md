@@ -41,11 +41,11 @@
 
 ##### Format and Lint
 
-`python3 -m black --config fmt.toml --check .`
+`python3 -m black --config black.toml --check roles/cp-rbac/library/`
 
-`python3 -m black --config fmt.toml .`
+`python3 -m black --config black.toml roles/cp-rbac/library/`
 
-`python3 -m flake8 --config fmt.toml .`
+`python3 -m flake8 --config  .flake8 roles/cp-rbac/library/`
 
 ##### Deactivate Virtualenv
 

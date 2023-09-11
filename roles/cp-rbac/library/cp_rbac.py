@@ -219,7 +219,7 @@ class CPMetadataApiService:
         if response.ok:
             response_data = response.json()
 
-            if len(response_data) == 0:
+            if len(response_data) == 0 or self.principal not in response_data:
                 return [], []
 
             resource_role_bindings = list()

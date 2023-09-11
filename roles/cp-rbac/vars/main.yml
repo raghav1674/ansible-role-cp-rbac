@@ -6,7 +6,7 @@ clusters:
       groups:
         - principal: "KafkaDevelopers"
           clusterRoleBindings:
-            - roleName: SystemAdmin
+            - roleName: UserAdmin
           resourceRoleBindings:
             - roleName: DeveloperRead
               resourceType: Group
@@ -30,7 +30,7 @@ clusters:
               name: "kafka-cluster"
               patternType: LITERAL
       users:
-        - principal: "KafkaDevelopers"
+        - principal: "alice"
           clusterRoleBindings:
             - roleName: SystemAdmin
           resourceRoleBindings:
@@ -39,87 +39,29 @@ clusters:
               name: "*"
               patternType: LITERAL
         - principal: "raghav"
-          clusterRoleBindings:
-            - roleName: SystemAdmin
+          clusterRoleBindings:  []
 
-  connect-cluster:
-    clusterId: "connect-cluster"
-    principals:
-      groups:
-        - principal: "KafkaDevelopers1"
-          clusterRoleBindings:
-            - roleName: SystemAdmin
-            - roleName: ClusterAdmin
-          resourceRoleBindings:
-            - roleName: DeveloperRead
-              resourceType: "Connector"
-              name: "*"
-              patternType: LITERAL
-            - roleName: DeveloperRead
-              resourceType: "Connector"
-              name: "test*"
-              patternType: LITERAL
+              
+  connect-cluster: {}
+  #   clusterId: "connect-cluster"
+  #   principals:
+  #     groups: []
+  #     users: []
 
-      users:
-        - principal: "KafkaDevelopers"
-          clusterRoleBindings:
-            - roleName: SystemAdmin
-          resourceRoleBindings:
-            - roleName: DeveloperRead
-              resourceType: "Connector"
-              name: "*"
-              patternType: LITERAL
-        - principal: "raghav"
-          clusterRoleBindings:
-            - roleName: AuditAdmin
-            - roleName: UserAdmin
-          resourceRoleBindings:
-            - roleName: DeveloperWrite
-              resourceType: "Connector"
-              name: "*"
-              patternType: LITERAL
+  ksql-cluster: {}
+  #   clusterId: "ksql-cluster"
+  #   principals:
+  #     groups: []
+  #     users: []
 
-  ksql-cluster:
-    clusterId: "ksql-cluster"
-    principals:
-      groups:
-        - principal: "KafkaDevelopers1"
-          clusterRoleBindings:
-            - roleName: SystemAdmin
-            - roleName: ClusterAdmin
-      users:
-        - principal: "raghav"
-          clusterRoleBindings:
-            - roleName: SystemAdmin
-
-  schema-registry-cluster:
-    clusterId: "schema-registry"
-    principals:
-      groups:
-        - principal: "KafkaDevelopers1"
-          clusterRoleBindings:
-            - roleName: SystemAdmin
-            - roleName: ClusterAdmin
-      users:
-        - principal: "raghav"
-          clusterRoleBindings:
-            - roleName: SystemAdmin
-          resourceRoleBindings:
-            - roleName: DeveloperWrite
-              resourceType: "Subject"
-              name: "*"
-              patternType: LITERAL
-        - principal: "alice"
-          clusterRoleBindings:
-            - roleName: SystemAdmin
-          resourceRoleBindings:
-            - roleName: DeveloperWrite
-              resourceType: "Subject"
-              name: "*"
-              patternType: LITERAL
+  schema-registry-cluster: {}
+  #   clusterId: "schema-registry"
+  #   principals:
+  #     groups: []
+  #     users: []
 # {
 #   "clusters": {
-#     "kafka-cluster": "D8TCDF-bS0mdqQiH8O15xw",
+#     "kafka-cluster": "Pw2VPEUlSJ6N16edtg_9qg",
 #     "connect-cluster": "connect-cluster",
 #     "ksql-cluster": "ksql-cluster",
 #     "schema-registry-cluster": "schema-registry"
